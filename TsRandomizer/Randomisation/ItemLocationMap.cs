@@ -114,7 +114,7 @@ namespace TsRandomizer.Randomisation
 				Add(new ExternalItemLocation(itemInfoProvider.Get(EInventoryRelicType.PyramidsKey)));
 		}
 
-		async void SetupGates()
+		void SetupGates()
 		{
 			OculusRift = (SeedOptions.EyeSpy)
 				? R.OculusRift
@@ -135,7 +135,7 @@ namespace TsRandomizer.Randomisation
 				| (R.GateMilitaryGate & (R.CardE | R.CardB));
 
 			LakeDesolationRight = 
-				(LakeDesolationLeft & (FloodsFlags.LakeDesolation || SeedOptions.GlitchesLogic ? R.Free : R.TimeStop | R.ForwardDash))
+				(LakeDesolationLeft & (FloodsFlags.LakeDesolation || SeedOptions.GlitchesLogic ? R.Free : (R.TimeStop | R.ForwardDash)))
 				| R.GateKittyBoss
 				| R.GateLeftLibrary
 				| (R.GateSealedSirensCave & R.CardE)
