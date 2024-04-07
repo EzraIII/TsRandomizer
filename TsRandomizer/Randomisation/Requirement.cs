@@ -28,6 +28,9 @@ namespace TsRandomizer.Randomisation
 		public static readonly Requirement DoubleJump = 1UL << 13;
 		public static readonly Requirement GasMask = 1UL << 14;
 		public static readonly Requirement Teleport = 1UL << 15;
+		public static readonly Requirement SuccubusHairpin = 1UL << 16;
+		public static readonly Requirement CelestialSash = 1UL << 17;
+		public static readonly Requirement Lightwall = 1UL << 18;
 		public static readonly Requirement TimespinnerPiece1 = 1UL << 21;
 		public static readonly Requirement TimespinnerPiece2 = 1UL << 22;
 		public static readonly Requirement TimespinnerPiece3 = 1UL << 23;
