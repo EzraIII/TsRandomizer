@@ -227,6 +227,7 @@ namespace TsRandomizer.Randomisation
 			MilitaryFortressHangar = MilitaryFortress & R.TimeStop;
 			BeforeTheLab = MilitaryFortressHangar & (FloodsFlags.Lab ? R.Swimming : (R.DoubleJump | R.Teleport & (R.TimespinnerWheel | R.ForwardDash) | R.TimespinnerWheel & R.ForwardDash));
 			TheLab = BeforeTheLab & R.CardB;
+			if(SeedOptions.GlitchesLogic) TheLab |= BeforeTheLab & (FloodsFlags.Lab ? R.Swimming : R.DoubleJump);
 			TheLabPoweredOff = TheLab & DoubleJumpOfNpc;
 			UpperLab = TheLabPoweredOff & ForwardDashDoubleJump;
 			RavenlordsLair = UpperLab & R.MerchantCrow;
@@ -353,14 +354,14 @@ namespace TsRandomizer.Randomisation
 			Add(new ItemKey(11, 36, 312, 192), "Lab: Coffee break", ItemProvider.Get(EInventoryUseItemType.FoodSynth), TheLab);
 			Add(new ItemKey(11, 3, 1528, 192), "Lab: Lower trash right", ItemProvider.Get(EItemType.MaxHP), TheLab & (FloodsFlags.Lab ? R.Free : (R.DoubleJump | R.TimespinnerWheel & R.ForwardDash)));
 			Add(new ItemKey(11, 3, 72, 192), "Lab: Lower trash left", ItemProvider.Get(EInventoryUseItemType.FuturePotion), TheLab & (FloodsFlags.Lab ? R.Free : R.UpwardDash)); //when lab power is on, it only requires DoubleJumpOfNpc, but we cant code for the power state
-			Add(new ItemKey(11, 25, 104, 192), "Lab: Below lab entrance", ItemProvider.Get(EItemType.MaxAura), TheLab & R.DoubleJump);
+			Add(new ItemKey(11, 25, 104, 192), "Lab: Below lab entrance", ItemProvider.Get(EItemType.MaxAura), TheLab & (FloodsFlags.Lab ? R.Swimming : R.DoubleJump));
 			Add(new ItemKey(11, 18, 824, 128), "Lab: Trash jump room", ItemProvider.Get(EInventoryUseItemType.ChaosHeal), TheLabPoweredOff & R.UpwardDash); //when lab power is on, it only requires DoubleJumpOfNpc, but we cant code for the power state
 			Add(new RoomItemKey(11, 39), "Lab: Dynamo Works", ItemProvider.Get(EInventoryOrbType.Eye, EOrbSlot.Melee), TheLabPoweredOff);
 			Add(new RoomItemKey(11, 21), "Lab: Genza (Blob Mom)", ItemProvider.Get(EInventoryRelicType.ScienceKeycardA), UpperLab);
-			Add(new RoomItemKey(11, 1), "Lab: Experiment #13", ItemProvider.Get(EInventoryRelicType.Dash), TheLabPoweredOff);
+			Add(new RoomItemKey(11, 1), "Lab: Experiment #13", ItemProvider.Get(EInventoryRelicType.Dash), (SeedOptions.TwoPlayerLogic ? (TheLab & (R.DoubleJump | R.ForwardDash & R.TimespinnerWheel)) : (SeedOptions.GlitchesLogic ? (TheLab & R.DoubleJump) : TheLabPoweredOff)));
 			Add(new ItemKey(11, 6, 328, 192), "Lab: Download and chest room chest", ItemProvider.Get(EInventoryEquipmentType.LabCoat), UpperLab);
 			Add(new ItemKey(11, 27, 296, 160), "Lab: Lab secret", ItemProvider.Get(EItemType.MaxSand), UpperLab & OculusRift);
-			Add(new RoomItemKey(11, 26), "Lab: Spider Hell", ItemProvider.Get(EInventoryRelicType.TimespinnerGear1), TheLabPoweredOff & R.CardA);
+			Add(new RoomItemKey(11, 26), "Lab: Spider Hell", ItemProvider.Get(EInventoryRelicType.TimespinnerGear1), (SeedOptions.GlitchesLogic ? (TheLab & (FloodsFlags.Lab ? R.Free : R.DoubleJump)) : TheLabPoweredOff & R.CardA));
 			areaName = "Emperor's Tower";
 			Add(new ItemKey(12, 5, 344, 192), "Emperor's Tower: Courtyard bottom chest", ItemProvider.Get(EItemType.MaxAura), EmperorsTower);
 			Add(new ItemKey(12, 3, 200, 160), "Emperor's Tower: Courtyard floor secret", ItemProvider.Get(EInventoryEquipmentType.LachiemCrown), EmperorsTower & R.UpwardDash & OculusRift);
