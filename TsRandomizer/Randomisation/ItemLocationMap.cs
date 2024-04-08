@@ -19,6 +19,7 @@ namespace TsRandomizer.Randomisation
 
 		internal R OculusRift;
 		internal R MawGasMask;
+		internal R Fire;
 
 		internal R LaserA;
 		internal R LaserI;
@@ -114,7 +115,7 @@ namespace TsRandomizer.Randomisation
 				Add(new ExternalItemLocation(itemInfoProvider.Get(EInventoryRelicType.PyramidsKey)));
 		}
 
-		void SetupGates()
+		async void SetupGates()
 		{
 			OculusRift = (SeedOptions.EyeSpy)
 				? R.OculusRift
@@ -123,6 +124,10 @@ namespace TsRandomizer.Randomisation
 			MawGasMask = (SeedOptions.GasMaw)
 				? R.GasMask
 				: R.Free;
+
+			Fire = (SeedOptions.TwoPlayerLogic)
+		        ? R.Free
+				: R.Fire;
 
 			LakeDesolationLeft = (!SeedOptions.Inverted)
 				? R.Free
@@ -133,13 +138,15 @@ namespace TsRandomizer.Randomisation
 				| R.GateXarion
 				| (R.GateSealedSirensCave & R.CardE)
 				| (R.GateMilitaryGate & (R.CardE | R.CardB));
+			if(SeedOptions.GlitchesLogic) LakeDesolationLeft |= R.GateSealedSirensCave & R.UpwardDash | R.GateMilitaryGate;
 
 			LakeDesolationRight = 
-				(LakeDesolationLeft & (FloodsFlags.LakeDesolation || SeedOptions.GlitchesLogic ? R.Free : (R.TimeStop | R.ForwardDash)))
+				(LakeDesolationLeft & (FloodsFlags.LakeDesolation ? R.Free : (R.TimeStop | R.ForwardDash)))
 				| R.GateKittyBoss
 				| R.GateLeftLibrary
 				| (R.GateSealedSirensCave & R.CardE)
 				| (R.GateMilitaryGate & (R.CardE | R.CardB));
+			if(SeedOptions.GlitchesLogic) LakeDesolationRight |= LakeDesolationLeft | (R.GateSealedSirensCave & R.UpwardDash) | R.GateMilitaryGate;
 
 			if (SeedOptions.Inverted && SeedOptions.PresentAccessWithWheelAndSpindle)
 			{
@@ -166,6 +173,7 @@ namespace TsRandomizer.Randomisation
 				| R.GateCastleKeep
 				| ((R.GateCavesOfBanishment | R.GateMaw) & (MawGasMask | R.ForwardDash) & NeedSwimming(FloodsFlags.Maw))  //through shaft
 				| ((R.GateCavesOfBanishment | (R.GateMaw & R.DoubleJump)) & NeedSwimming(!FloodsFlags.DryLakeSerene)); // though left entrance
+			if(SeedOptions.GlitchesLogic) RefugeeCamp |= R.TimespinnerWheel & R.TimespinnerSpindle & ((LakeDesolationRight & R.DoubleJump) | (R.GateSealedSirensCave & R.UpwardDash) | R.GateMilitaryGate);
 
 			MultipleSmallJumpsOfNpc = R.TimespinnerWheel | R.UpwardDash;
 			DoubleJumpOfNpc = (R.DoubleJump & R.TimespinnerWheel) | R.UpwardDash;
@@ -197,18 +205,25 @@ namespace TsRandomizer.Randomisation
 				: killTwins & killAelana & KillMaw;
 
 			//future
-			UpperLakeDesolation = LakeDesolationLeft & UpperLakeSirine & (SeedOptions.TwoPlayerLogic ? R.Free : R.Fire);
+			UpperLakeDesolation = LakeDesolationLeft & UpperLakeSirine & Fire;
+			if(SeedOptions.GlitchesLogic) UpperLakeDesolation |= LakeDesolationRight & R.DoubleJump; // TODO: EnemyRando Support
 			LeftLibrary = UpperLakeDesolation | LakeDesolationRight;
-			MidLibrary = (LeftLibrary & R.CardD) | (R.GateSealedSirensCave & R.CardE) | (R.GateMilitaryGate & (SeedOptions.GlitchesLogic ? R.Free : (R.CardB | R.CardE)));
-			UpperLeftLibrary = LeftLibrary & (SeedOptions.GlitchesLogic ? R.Free : (R.DoubleJump | R.ForwardDash));
+			MidLibrary = (LeftLibrary & R.CardD) | (R.GateSealedSirensCave & R.CardE) | (R.GateMilitaryGate & (R.CardB | R.CardE));
+			if(SeedOptions.GlitchesLogic) MidLibrary |= LeftLibrary & R.DoubleJump | R.GateSealedSirensCave & R.UpwardDash | R.GateMilitaryGate;
+			UpperLeftLibrary = LeftLibrary & (R.DoubleJump | R.ForwardDash);
+			if(SeedOptions.GlitchesLogic) UpperLeftLibrary |= LeftLibrary;
 			IfritsLair = UpperLeftLibrary & R.Kobo & RefugeeCamp;
-			UpperRightSideLibrary = (MidLibrary & (SeedOptions.GlitchesLogic ? R.Free : (R.CardC | (R.CardB & R.CardE)))) | ((R.GateMilitaryGate | R.GateSealedSirensCave) & R.CardE);
-			RightSideLibraryElevator = (SeedOptions.GlitchesLogic ? (R.Lightwall | R.CardE) : R.CardE) & ((MidLibrary & (SeedOptions.GlitchesLogic ? R.Free : (R.CardC | R.CardB))) | R.GateMilitaryGate | R.GateSealedSirensCave);
-			LowerRightSideLibrary = (MidLibrary & (SeedOptions.GlitchesLogic ? R.Free : R.CardB)) | RightSideLibraryElevator | R.GateMilitaryGate | R.GateSealedSirensCave & R.CardE;
+			UpperRightSideLibrary = (MidLibrary & (R.CardC | (R.CardB & R.CardE))) | ((R.GateMilitaryGate | R.GateSealedSirensCave) & R.CardE);
+			if(SeedOptions.GlitchesLogic) UpperRightSideLibrary |= MidLibrary | R.GateSealedSirensCave & R.UpwardDash | R.GateMilitaryGate;
+			RightSideLibraryElevator = R.CardE & ((MidLibrary & (R.CardC | R.CardB)) | R.GateMilitaryGate | R.GateSealedSirensCave);
+			if(SeedOptions.GlitchesLogic) RightSideLibraryElevator |= (R.Lightwall | R.CardE) & (MidLibrary | R.GateMilitaryGate | R.GateSealedSirensCave);
+			LowerRightSideLibrary = (MidLibrary & R.CardB) | RightSideLibraryElevator | R.GateMilitaryGate | R.GateSealedSirensCave & R.CardE;
+			if(SeedOptions.GlitchesLogic) LowerRightSideLibrary |= MidLibrary | R.GateSealedSirensCave & R.UpwardDash;
 			SealedCavesSkeleton = (LakeDesolationLeft & (FloodsFlags.LakeDesolation ? R.Free : R.DoubleJump)) | R.GateSealedCaves | R.GateXarion; // TODO: EnemyRando Support
 			SealedCaves = (SealedCavesSkeleton & R.CardA) | R.GateXarion;
 			SealedCavesSirens = (MidLibrary & R.CardB & R.CardE) | R.GateSealedSirensCave;
 			MilitaryFortress = LowerRightSideLibrary & pastCleared;
+			if(SeedOptions.GlitchesLogic) MilitaryFortress |= LowerRightSideLibrary & R.Lightwall & R.CelestialSash & R.SuccubusHairpin;
 			MilitaryFortressHangar = MilitaryFortress & R.TimeStop;
 			BeforeTheLab = MilitaryFortressHangar & (FloodsFlags.Lab ? R.Swimming : (R.DoubleJump | R.Teleport & (R.TimespinnerWheel | R.ForwardDash) | R.TimespinnerWheel & R.ForwardDash));
 			TheLab = BeforeTheLab & R.CardB;
@@ -216,13 +231,6 @@ namespace TsRandomizer.Randomisation
 			UpperLab = TheLabPoweredOff & ForwardDashDoubleJump;
 			RavenlordsLair = UpperLab & R.MerchantCrow;
 			EmperorsTower = UpperLab;
-
-			if(SeedOptions.GlitchesLogic){
-				UpperLakeDesolation |= LakeDesolationRight & R.DoubleJump; // TODO: EnemyRando Support
-				MidLibrary |= LeftLibrary & R.DoubleJump | R.GateSealedSirensCave & R.UpwardDash;
-				LowerRightSideLibrary |= R.GateSealedSirensCave & R.UpwardDash;
-				MilitaryFortress |= LowerRightSideLibrary & R.Lightwall & R.CelestialSash & R.SuccubusHairpin;
-			}
 
 			//pyramid
 			var completeTimespinner = R.TimespinnerPiece1 & R.TimespinnerPiece2 & R.TimespinnerPiece3 & R.TimespinnerSpindle & R.TimespinnerWheel;
@@ -238,6 +246,8 @@ namespace TsRandomizer.Randomisation
 				)
 				& NeedSwimming(FloodsFlags.BackPyramid);
 			Nightmare = RightPyramid & completeTimespinner;
+
+			
 		}
 
 		static int CalculateCapacity(SeedOptions options)
