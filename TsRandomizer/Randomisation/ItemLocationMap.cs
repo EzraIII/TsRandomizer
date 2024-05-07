@@ -261,6 +261,7 @@ namespace TsRandomizer.Randomisation
 					| R.GateRightPyramid
 				)
 				& NeedSwimming(FloodsFlags.BackPyramid);
+			if(SeedOptions.GlitchesLogic) RightPyramid |= MidPyramid & ForwardDashDoubleJump & NeedSwimming(FloodsFlags.BackPyramid);
 			Nightmare = RightPyramid & completeTimespinner;
 
 			
