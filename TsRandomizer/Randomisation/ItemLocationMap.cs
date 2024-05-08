@@ -257,7 +257,7 @@ namespace TsRandomizer.Randomisation
 			MidPyramid = PyramidEntrance & R.DoubleJump;
 			RightPyramid = 
 				(
-					(MidPyramid & (FloodsFlags.PyramidShaft ? R.Free : R.UpwardDash)) 
+					(MidPyramid & (FloodsFlags.PyramidShaft ? R.Free : R.CelestialSash))
 					| R.GateRightPyramid
 				)
 				& NeedSwimming(FloodsFlags.BackPyramid);
