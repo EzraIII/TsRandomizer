@@ -231,7 +231,7 @@ namespace TsRandomizer.Randomisation
 			if(SeedOptions.GlitchesLogic) RightSideLibraryElevator |= (R.Lightwall | R.CardE) & (MidLibrary | R.GateMilitaryGate | R.GateSealedSirensCave);
 			LowerRightSideLibrary = (MidLibrary & R.CardB) | RightSideLibraryElevator | R.GateMilitaryGate | R.GateSealedSirensCave & R.CardE;
 			if(SeedOptions.GlitchesLogic) LowerRightSideLibrary |= MidLibrary | R.GateSealedSirensCave & R.UpwardDash;
-			SealedCavesSkeleton = (LakeDesolationLeft & (FloodsFlags.LakeDesolation ? R.Free : R.DoubleJump)) | R.GateSealedCaves | R.GateXarion; // TODO: EnemyRando Support
+			SealedCavesSkeleton = (LakeDesolationLeft & (FloodsFlags.LakeDesolation ? R.Free : R.DoubleJump)) | R.GateSealedCaves | R.GateXarion; // TODO: EnemyRando with GlitchesLogic Support
 			SealedCaves = (SealedCavesSkeleton & R.CardA) | R.GateXarion;
 			if(SeedOptions.GlitchesLogic) SealedCaves |= SealedCavesSkeleton;
 			SealedCavesSirens = (MidLibrary & R.CardB & R.CardE) | R.GateSealedSirensCave;
@@ -297,15 +297,15 @@ namespace TsRandomizer.Randomisation
 			Add(new ItemKey(1, 15, 264, 144), "Lake Desolation: Starter chest 3", ItemProvider.Get(EInventoryEquipmentType.OldCoat), LakeDesolationLeft);
 			Add(new ItemKey(1, 25, 296, 176), "Lake Desolation: Starter chest 1", ItemProvider.Get(EInventoryUseItemType.FutureHiPotion), LakeDesolationLeft);
 			Add(new ItemKey(1, 9, 600, 144 + TimespinnerWheel.YOffset), "Lake Desolation (Lower): Timespinner Wheel room", ItemProvider.Get(EInventoryRelicType.TimespinnerWheel), LakeDesolationLeft);
-			Add(new ItemKey(1, 14, 40, 176), "Lake Desolation: Forget me not chest", ItemProvider.Get(EInventoryUseItemType.EssenceCrystal), UpperLakeDesolation);
+			Add(new ItemKey(1, 14, 40, 176), "Lake Desolation: Forget me not chest", ItemProvider.Get(EInventoryUseItemType.EssenceCrystal), (SeedOptions.GlitchesLogic ? (LakeDesolationLeft & (UpperLakeSirine & Fire | R.UpwardDash)) : UpperLakeDesolation)); // TODO: GlitchesLogic & Haipin & Talaria
 			areaName = "Lower Lake Desolation";
-			Add(new ItemKey(1, 2, 1016, 384), "Lake Desolation (Lower): Chicken chest", ItemProvider.Get(EItemType.MaxSand), LakeDesolationLeft & R.TimeStop);
-			Add(new ItemKey(1, 11, 72, 240), "Lake Desolation (Lower): Not so secret room", ItemProvider.Get(EItemType.MaxHP), LakeDesolationRight & OculusRift);
+			Add(new ItemKey(1, 2, 1016, 384), "Lake Desolation (Lower): Chicken chest", ItemProvider.Get(EItemType.MaxSand), LakeDesolationLeft & (SeedOptions.GlitchesLogic ? R.Free : R.TimeStop));
+			Add(new ItemKey(1, 11, 72, 240), "Lake Desolation (Lower): Not so secret room", ItemProvider.Get(EItemType.MaxHP), LakeDesolationRight & (SeedOptions.GlitchesLogic ? R.Free : OculusRift));
 			Add(new ItemKey(1, 3, 56, 176), "Lake Desolation (Upper): Tank chest", ItemProvider.Get(EItemType.MaxAura), LakeDesolationLeft & R.TimeStop);
 			areaName = "Upper Lake Desolation";
 			Add(new ItemKey(1, 17, 152, 96), "Lake Desolation (Upper): Oxygen recovery room", ItemProvider.Get(EInventoryUseItemType.GoldRing), UpperLakeDesolation);
-			Add(new ItemKey(1, 21, 200, 144), "Lake Desolation (Upper): Secret room", ItemProvider.Get(EInventoryUseItemType.EssenceCrystal), UpperLakeDesolation & OculusRift);
-			Add(new ItemKey(1, 20, 232, 96), "Lake Desolation (Upper): Double jump cave platform", ItemProvider.Get(EInventoryUseItemType.MagicMarbles), UpperLakeDesolation & R.DoubleJump);
+			Add(new ItemKey(1, 21, 200, 144), "Lake Desolation (Upper): Secret room", ItemProvider.Get(EInventoryUseItemType.EssenceCrystal), UpperLakeDesolation & (SeedOptions.GlitchesLogic ? R.Free : OculusRift));
+			Add(new ItemKey(1, 20, 232, 96), "Lake Desolation (Upper): Double jump cave platform", ItemProvider.Get(EInventoryUseItemType.MagicMarbles), UpperLakeDesolation & R.DoubleJump); // TODO: EnemyRando with GlitchesLogic support
 			Add(new ItemKey(1, 20, 168, 240), "Lake Desolation (Upper): Double jump cave floor", ItemProvider.Get(EInventoryUseItemType.FuturePotion), UpperLakeDesolation);
 			Add(new ItemKey(1, 22, 344, 160), "Lake Desolation (Upper): Sparrow chest", ItemProvider.Get(EInventoryUseItemType.FutureHiPotion), UpperLakeDesolation);
 			Add(new ItemKey(1, 18, 1320, 189), "Lake Desolation (Upper): Crash site pedestal", ItemProvider.Get(EInventoryOrbType.Moon, EOrbSlot.Melee), UpperLakeDesolation);
